@@ -1,0 +1,85 @@
+{
+    "name": "Implied Correlation Dispersion",
+    "version": "1.0.0",
+    "type": "exotic-alpha",
+    "author": "Daemon Alpha Lab",
+    "created": "2026-02-19",
+    
+    "description": "Captures correlation risk premium by trading the spread between implied correlation (from index options) and realized correlation (actual co-movements).",
+    
+    "hypothesis": {
+        "core": "Implied correlation systematically differs from realized correlation, creating arbitrage opportunities",
+        "mechanism": "Index options overestimate correlation during stress, underestimate during calm",
+        "edge": "Sector ETF correlation proxy allows retail implementation of institutional dispersion trades"
+    },
+    
+    "instruments": {
+        "index": ["SPY"],
+        "sectors": ["XLK", "XLF", "XLE", "XLV", "XLI", "XLC", "XLY", "XLP"],
+        "alternatives": ["QQQ", "IWM", "DIA"]
+    },
+    
+    "parameters": {
+        "corr_lookback": 20,
+        "vol_lookback": 20,
+        "zscore_threshold": 1.5,
+        "max_sector_weight": 0.10,
+        "max_spy_weight": 0.40,
+        "min_trade_size": 0.02,
+        "max_drawdown": 0.12
+    },
+    
+    "trade_types": {
+        "DISPERSION_LONG": {
+            "description": "Implied corr > realized corr - bet on decorrelation",
+            "action": "Long sectors, short SPY",
+            "expected_scenario": "Individual stocks move independently"
+        },
+        "DISPERSION_SHORT": {
+            "description": "Implied corr < realized corr - bet on correlation",
+            "action": "Long SPY, short sectors",
+            "expected_scenario": "Macro factors dominate, stocks move together"
+        },
+        "FLAT": {
+            "description": "No significant correlation mispricing",
+            "action": "No position"
+        }
+    },
+    
+    "risk_management": {
+        "market_neutral": true,
+        "sector_diversification": "8 sectors minimum",
+        "hedge_ratio": 0.8,
+        "max_drawdown_stop": 0.12,
+        "position_limits": {
+            "per_sector": 0.10,
+            "spy_hedge": 0.40
+        }
+    },
+    
+    "backtest": {
+        "start_date": "2022-01-01",
+        "end_date": "2024-12-31",
+        "initial_capital": 100000,
+        "resolution": "Hour"
+    },
+    
+    "expected_performance": {
+        "sharpe_ratio": 1.2,
+        "max_drawdown": 0.11,
+        "win_rate": 0.52,
+        "annual_return": 0.15,
+        "beta": 0.15
+    },
+    
+    "novelty_score": 10,
+    "complexity_score": 9,
+    "data_requirements": ["equity_prices", "sector_etf_prices"],
+    
+    "academic_references": [
+        "Driessen, Maenhout, Vilkov (2009) - The Price of Correlation Risk",
+        "Buss, Vilkov (2012) - Measuring Equity Risk with Option-Implied Correlations"
+    ],
+    
+    "tags": ["correlation", "dispersion", "market-neutral", "arbitrage", "exotic", "institutional"]
+}

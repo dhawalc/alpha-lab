@@ -1,0 +1,86 @@
+{
+    "name": "Volatility Term Structure Arbitrage",
+    "version": "1.0.0",
+    "type": "exotic-alpha",
+    "author": "Daemon Alpha Lab",
+    "created": "2026-02-19",
+    
+    "description": "Exploits VIX futures term structure (contango/backwardation) to predict SPX direction. Extreme backwardation signals panic capitulation.",
+    
+    "hypothesis": {
+        "core": "VIX term structure slope contains predictive information about future equity returns",
+        "mechanism": "Near-term vs long-term fear differential reveals market positioning extremes",
+        "edge": "Most traders watch VIX level; we watch VIX SLOPE z-score"
+    },
+    
+    "instruments": {
+        "primary": ["SPY"],
+        "signals": ["VXX", "VIXM", "UVXY"],
+        "alternatives": ["QQQ", "IWM"]
+    },
+    
+    "parameters": {
+        "lookback_days": 60,
+        "zscore_buy_threshold": -1.5,
+        "zscore_sell_threshold": 1.5,
+        "zscore_extreme_buy": -2.5,
+        "base_position_size": 0.6,
+        "max_position_size": 0.95,
+        "min_position_size": 0.1,
+        "max_drawdown": 0.15,
+        "trailing_stop_pct": 0.08
+    },
+    
+    "regimes": {
+        "EXTREME_BACKWARDATION": {
+            "description": "Capitulation signal - max conviction buy",
+            "zscore_range": "< -2.5",
+            "action": "Long 95%"
+        },
+        "BACKWARDATION": {
+            "description": "Elevated fear - buy signal",
+            "zscore_range": "-2.5 to -1.5",
+            "action": "Long 80%"
+        },
+        "NEUTRAL": {
+            "description": "Normal market conditions",
+            "zscore_range": "-1.5 to +1.5",
+            "action": "Long 60%"
+        },
+        "STEEP_CONTANGO": {
+            "description": "Complacency - reduce exposure",
+            "zscore_range": "> +1.5",
+            "action": "Long 10%"
+        }
+    },
+    
+    "risk_management": {
+        "max_drawdown_hard_stop": 0.15,
+        "volatility_scaling": true,
+        "position_limits": {
+            "min": 0.0,
+            "max": 0.95
+        }
+    },
+    
+    "backtest": {
+        "start_date": "2022-01-01",
+        "end_date": "2024-12-31",
+        "initial_capital": 100000,
+        "resolution": "Hour"
+    },
+    
+    "expected_performance": {
+        "sharpe_ratio": 1.3,
+        "max_drawdown": 0.18,
+        "win_rate": 0.58,
+        "annual_return": 0.22,
+        "trades_per_year": 45
+    },
+    
+    "novelty_score": 9,
+    "complexity_score": 7,
+    "data_requirements": ["equity_prices", "vix_etf_prices"],
+    
+    "tags": ["volatility", "term-structure", "mean-reversion", "regime-detection", "exotic"]
+}

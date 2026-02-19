@@ -1,0 +1,41 @@
+{
+  "name": "flow_momentum_hybrid_v1",
+  "hypothesis": "We are exploiting a market inefficiency by combining options flow patterns with price momentum. In periods of high options flow, we expect to see increased volatility and potential mispricings in the underlying asset, which can be exploited for profit through a momentum trading strategy.",
+  "entry_rules": [
+    {
+      "type": "options_flow",
+      "condition": "high"
+    },
+    {
+      "type": "momentum",
+      "condition": "bullish"
+    }
+  ],
+  "exit_rules": [
+    {
+      "type": "momentum",
+      "condition": "bearish"
+    },
+    {
+      "type": "risk_management",
+      "condition": "max_loss_reached"
+    }
+  ],
+  "risk_params": {
+    "position_sizing": {
+      "method": "fixed",
+      "amount": 1000
+    },
+    "stop_loss": 0.02,
+    "take_profit": 0.04
+  },
+  "backtest_period": {
+    "start_date": "2022-01-01",
+    "end_date": "2024-12-31"
+  },
+  "expected_metrics": {
+    "sharpe_ratio": 1.2,
+    "max_dd": 20,
+    "win_rate": 50
+  }
+}

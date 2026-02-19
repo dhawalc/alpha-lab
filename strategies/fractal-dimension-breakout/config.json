@@ -1,0 +1,64 @@
+{
+  "algorithm_name": "FractalDimensionBreakout",
+  "version": "1.0.0",
+  "author": "Daemon Alpha-Lab",
+  "created": "2026-02-19",
+  
+  "strategy_type": "regime_adaptive_breakout",
+  "novelty_score": 9.0,
+  
+  "parameters": {
+    "hurst_lookback": 100,
+    "min_lag": 2,
+    "max_lag": 20,
+    "trending_threshold": 0.55,
+    "mean_reversion_threshold": 0.45,
+    "breakout_lookback": 20,
+    "max_position_size": 0.35,
+    "base_stop_loss": 0.025
+  },
+  
+  "assets": {
+    "primary": ["SPY", "QQQ"],
+    "hedge": ["TLT"]
+  },
+  "resolution": "hour",
+  "benchmark": "SPY",
+  
+  "backtest_config": {
+    "start_date": "2022-01-01",
+    "end_date": "2024-12-31",
+    "initial_capital": 100000,
+    "currency": "USD"
+  },
+  
+  "expected_metrics": {
+    "sharpe_ratio": ">1.1",
+    "max_drawdown": "<22%",
+    "win_rate": ">48%",
+    "cagr": ">10%"
+  },
+  
+  "unique_features": {
+    "hurst_duration_estimation": true,
+    "fractal_dimension_calculation": true,
+    "regime_adaptive_stops": true,
+    "automatic_bond_hedging": true
+  },
+  
+  "research_basis": [
+    "Mandelbrot (1971) - Fractal geometry of markets",
+    "Lo (1991) - Long-term memory in stock market prices",
+    "Peters (1994) - Fractal Market Analysis",
+    "Cajueiro & Tabak (2004) - Hurst exponent and market efficiency"
+  ],
+  
+  "tags": [
+    "fractal",
+    "hurst_exponent",
+    "regime_detection",
+    "breakout",
+    "duration_targeting",
+    "novel"
+  ]
+}

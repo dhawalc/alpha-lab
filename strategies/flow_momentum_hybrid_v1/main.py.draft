@@ -1,0 +1,54 @@
+from AlgorithmImports import *
+
+class FlowMomentumHybridV1(QCAlgorithm):
+    def Initialize(self):
+        self.SetStartDate(2022, 1, 1)
+        self.SetEndDate(2024, 12, 31)
+        
+        self.symbol = self.AddEquity("AAPL", Resolution.Daily).Symbol
+        
+        self.options = self.OptionChainProvider.GetOptionContractList(self.symbol, self.Time.Date)
+        for option in self.options:
+            if option.Strike >= self.symbol.Price * 0.95 and option.Strike <= self.symbol.Price * 1.05:
+                self.option_symbol = option.Symbol
+                break
+        
+        self.SetCash(100000)
+        
+        self.entry_price = None
+        self.exit_price = None
+        
+        self.RegisterIndicator(self.symbol, ExponentialMovingAverage(20), Resolution.Daily)
+    
+    def OnData(self, data):
+        if not self.Portfolio.Invested and self.IsReadyForEntry():
+            self.entry_price = self.symbol.Price
+            self.SetHoldings(self.symbol, 1)
+        
+        elif self.Portfolio[self.symbol].Invested and self.IsReadyForExit():
+            self.exit_price = self.symbol.Price
+            self.Liquidate()
+    
+    def IsReadyForEntry(self):
+        if self.entry_price is None:
+            return False
+        
+        options_flow = self.GetOptionFlowHistory(self.option_symbol, 1).GetTotalVolume()
+        momentum = self.Indicators[self.symbol].Current.Value > self.Indicators[self.symbol].SMA.Current.Value
+        
+        return options_flow > 5000 and momentum
+    
+    def IsReadyForExit(self):
+        if not self.Portfolio.Invested:
+            return False
+        
+        momentum = self.Indicators[self.symbol].Current.Value < self.Indicators[self.symbol].SMA.Current.Value
+        max_loss_reached = (self.exit_price - self.entry_price) / self.entry_price <= -0.02
+        
+        return momentum or max_loss_reached
+    
+    def OnOrderEvent(self, order_event):
+        if order_event.Status == OrderStatus.Filled:
+            self.Debug(f"Order filled: {order_event}")
+        elif order_event.Status == OrderStatus.Canceled:
+            self.Debug(f"Order canceled: {order_event}")

@@ -1,0 +1,38 @@
+{
+  "name": "overnight_drift_capture_v1",
+  "hypothesis": "Exploit the discrepancy between overnight market movements and intraday patterns.",
+  "entry_rules": [
+    {
+      "type": " Overnight Drift",
+      "condition": "If the difference between the close price of a security on one day and its open price on the next day is greater than a specified threshold (e.g., $1) and it occurs during the overnight hours."
+    },
+    {
+      "type": "Price Momentum",
+      "condition": "If the price momentum over the past N days (e.g., 5 days) is positive."
+    }
+  ],
+  "exit_rules": [
+    {
+      "type": "Price Reversion",
+      "condition": "If the price reverts to its average level over the past M days (e.g., 10 days)."
+    },
+    {
+      "type": "Stop Loss",
+      "condition": "If the price falls by more than a specified percentage (e.g., 5%) from the entry price."
+    }
+  ],
+  "risk_params": {
+    "position_sizing": "Risk-Adjusted Position Sizing based on position size = (account balance * risk factor) / (expected average daily return of the strategy).",
+    "stop_loss": "-5%",
+    "take_profit": "10%"
+  },
+  "backtest_period": {
+    "start_date": "2022-01-01",
+    "end_date": "2024-12-31"
+  },
+  "expected_metrics": {
+    "sharpe_ratio": "> 1.0",
+    "max_dd": "< 25%",
+    "win_rate": "> 45%"
+  }
+}

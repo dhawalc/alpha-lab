@@ -1,0 +1,61 @@
+{
+  "algorithm_name": "EntropyRegimeDetector",
+  "version": "1.0.0",
+  "author": "Daemon Alpha-Lab",
+  "created": "2026-02-19",
+  
+  "strategy_type": "regime_detection",
+  "novelty_score": 9.2,
+  
+  "parameters": {
+    "embedding_dimension": 5,
+    "time_delay_tau": 1,
+    "lookback_periods": 120,
+    "low_entropy_threshold": 0.65,
+    "high_entropy_threshold": 0.85,
+    "max_position_size": 0.30,
+    "base_stop_loss": 0.03,
+    "profit_target": 0.05
+  },
+  
+  "assets": ["SPY", "QQQ", "IWM"],
+  "resolution": "hour",
+  "benchmark": "SPY",
+  
+  "backtest_config": {
+    "start_date": "2022-01-01",
+    "end_date": "2024-12-31",
+    "initial_capital": 100000,
+    "currency": "USD"
+  },
+  
+  "expected_metrics": {
+    "sharpe_ratio": ">1.2",
+    "max_drawdown": "<20%",
+    "win_rate": ">50%",
+    "cagr": ">12%"
+  },
+  
+  "risk_controls": {
+    "max_leverage": 1.0,
+    "max_sector_exposure": 0.40,
+    "stop_loss_enabled": true,
+    "trailing_stop": true,
+    "regime_based_sizing": true
+  },
+  
+  "research_basis": [
+    "Bandt & Pompe (2002) - Permutation Entropy",
+    "Zunino et al. (2009) - Forbidden patterns in financial time series",
+    "Rosso et al. (2007) - Distinguishing noise from chaos"
+  ],
+  
+  "tags": [
+    "entropy",
+    "regime_detection",
+    "information_theory",
+    "permutation_entropy",
+    "adaptive_sizing",
+    "novel"
+  ]
+}

@@ -1,0 +1,36 @@
+from AlgorithmImports import *
+
+class OvernightDriftCaptureV1(QCAlgorithm):
+    def Initialize(self):
+        self.SetStartDate(2022, 1, 1)  # Set Start Date
+        self.SetEndDate(2024, 12, 31)    # Set End Date
+
+        self.symbol = self.AddEquity("SPY", Resolution.Daily).Symbol
+        
+        self.drift_threshold = 1.0
+        self.momentum_days = 5
+        self.reversion_days = 10
+        self.risk_factor = 0.02  # Example risk factor
+
+    def OnData(self, data):
+        if not data.Bars.ContainsKey(self.symbol): return
+        
+        current_bar = data.Bars[self.symbol]
+        
+        overnight_drift = (current_bar.Open - self.Securities[self.symbol].Close)
+        momentum = sum([data.Bars[self.symbol].High[i] for i in range(current_bar.EndTime - timedelta(days=self.momentum_days), current_bar.EndTime)]) / self.momentum_days
+        
+        if overnight_drift > self.drift_threshold and momentum > 0:
+            self.SetHoldings(self.symbol, 1.0)
+        
+        if self.Portfolio[self.symbol].IsLong:
+            average_price = sum([self.Securities[self.symbol].History(timedelta(days=i), Resolution.Daily).Close for i in range(1, self.reversion_days+1)]).mean()
+            if current_bar.Close < average_price * 0.95:
+                self.Liquidate(self.symbol)
+            elif (current_bar.High - current_bar.Low) / current_bar.Low > 0.05:
+                self.Liquidate(self.symbol)
+
+    def OnEndOfDay(self):
+        if not self.Portfolio.IsInMarket:
+            position_size = (self.Brokerage.GetCash() * self.risk_factor) / (self.MeanReturn(self.symbol))
+            self.SetHoldings(self.symbol, position_size)
