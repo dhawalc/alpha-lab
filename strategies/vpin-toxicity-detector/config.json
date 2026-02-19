@@ -1,0 +1,64 @@
+{
+  "algorithm_name": "VPINToxicityDetector",
+  "version": "1.0.0",
+  "author": "Daemon Alpha-Lab",
+  "created": "2026-02-19",
+  
+  "strategy_type": "microstructure_alpha",
+  "novelty_score": 9.5,
+  
+  "parameters": {
+    "bucket_size": 50000,
+    "n_buckets": 50,
+    "sigma_lookback": 20,
+    "high_toxicity_threshold": 0.65,
+    "low_toxicity_threshold": 0.35,
+    "vpin_acceleration_threshold": 0.05,
+    "max_position_size": 0.30,
+    "base_stop_loss": 0.02,
+    "profit_target": 0.04
+  },
+  
+  "assets": ["SPY", "QQQ"],
+  "resolution": "minute",
+  "benchmark": "SPY",
+  
+  "backtest_config": {
+    "start_date": "2022-01-01",
+    "end_date": "2024-12-31",
+    "initial_capital": 100000,
+    "currency": "USD"
+  },
+  
+  "expected_metrics": {
+    "sharpe_ratio": ">1.3",
+    "max_drawdown": "<18%",
+    "win_rate": ">52%",
+    "cagr": ">15%"
+  },
+  
+  "unique_features": {
+    "volume_synchronized_buckets": true,
+    "bulk_volume_classification": true,
+    "toxicity_regime_detection": true,
+    "vpin_based_exits": true,
+    "informed_flow_prediction": true
+  },
+  
+  "research_basis": [
+    "Easley et al. (2011) - VPIN and the Flash Crash",
+    "Easley et al. (2012) - Flow Toxicity and Liquidity",
+    "Abad & Yagüe (2012) - From PIN to VPIN",
+    "Andersen & Bondarenko (2014) - VPIN and Market Stress"
+  ],
+  
+  "tags": [
+    "vpin",
+    "microstructure",
+    "order_flow",
+    "toxicity",
+    "informed_trading",
+    "high_frequency",
+    "novel"
+  ]
+}

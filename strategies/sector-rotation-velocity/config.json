@@ -1,0 +1,94 @@
+{
+    "name": "Sector Rotation Velocity",
+    "version": "1.0.0",
+    "type": "exotic-alpha",
+    "author": "Daemon Alpha Lab",
+    "created": "2026-02-19",
+    
+    "description": "Uses the SECOND DERIVATIVE of relative strength to identify sector rotation inflection points. Momentum of momentum = meta-momentum.",
+    
+    "hypothesis": {
+        "core": "Rate of change of relative strength (acceleration) predicts trend beginnings and endings",
+        "mechanism": "Accelerating RS = early trend entry; Decelerating RS = early trend exit",
+        "edge": "Everyone watches RS level; we watch RS acceleration for 5-10 day lead time"
+    },
+    
+    "instruments": {
+        "benchmark": ["SPY"],
+        "sectors": [
+            "XLK", "XLF", "XLE", "XLV", "XLI", 
+            "XLC", "XLY", "XLP", "XLU", "XLB", "XLRE"
+        ]
+    },
+    
+    "parameters": {
+        "rs_lookback": 20,
+        "velocity_lookback": 10,
+        "accel_lookback": 5,
+        "top_n_sectors": 3,
+        "max_sector_weight": 0.25,
+        "total_equity_exposure": 0.90,
+        "min_rs_velocity": 0.0,
+        "min_rs_level": 0.95,
+        "rebalance_days": 5,
+        "max_drawdown": 0.18,
+        "sector_stop_loss": 0.08
+    },
+    
+    "scoring_weights": {
+        "acceleration": 0.50,
+        "velocity": 0.30,
+        "level": 0.20,
+        "rationale": "Acceleration weighted highest for early entry/exit signals"
+    },
+    
+    "derivative_calculations": {
+        "relative_strength": "RS(t) = (1 + sector_return) / (1 + spy_return)",
+        "velocity": "V(t) = [RS(t) - RS(t-10)] / 10",
+        "acceleration": "A(t) = [V(t) - V(t-5)] / 5"
+    },
+    
+    "entry_criteria": {
+        "acceleration": "> 0 (positive acceleration required)",
+        "velocity": "> 0 (upward RS trend)",
+        "level": "> 0.95 (near or above benchmark)"
+    },
+    
+    "risk_management": {
+        "max_portfolio_drawdown": 0.18,
+        "sector_stop_loss": 0.08,
+        "position_limits": {
+            "per_sector": 0.25,
+            "total_exposure": 0.90
+        },
+        "defensive_mode": "All cash if no sectors pass filters"
+    },
+    
+    "backtest": {
+        "start_date": "2022-01-01",
+        "end_date": "2024-12-31",
+        "initial_capital": 100000,
+        "resolution": "Hour",
+        "rebalance_frequency": "Bi-weekly"
+    },
+    
+    "expected_performance": {
+        "sharpe_ratio": 1.4,
+        "max_drawdown": 0.16,
+        "win_rate": 0.55,
+        "annual_return": 0.25,
+        "beta": 0.85
+    },
+    
+    "novelty_score": 9,
+    "complexity_score": 6,
+    "data_requirements": ["equity_prices", "sector_etf_prices"],
+    
+    "intellectual_property": {
+        "concept": "Second derivative of relative strength",
+        "innovation": "Meta-momentum / momentum of momentum",
+        "prior_art": "None found - appears novel"
+    },
+    
+    "tags": ["sector-rotation", "momentum", "acceleration", "meta-momentum", "exotic", "derivative"]
+}
