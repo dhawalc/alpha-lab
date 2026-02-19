@@ -1,0 +1,20 @@
+{
+    "data-folder": "./data",
+    "results-destination-folder": "./backtests",
+    "algorithm-language": "Python",
+    "parameters": {},
+    "environments": {
+        "backtesting": {
+            "live-mode": false,
+            "setup-handler": "QuantConnect.Lean.Engine.Setup.BacktestingSetupHandler",
+            "result-handler": "QuantConnect.Lean.Engine.Results.BacktestingResultHandler",
+            "data-feed-handler": "QuantConnect.Lean.Engine.DataFeeds.FileSystemDataFeed",
+            "real-time-handler": "QuantConnect.Lean.Engine.RealTime.BacktestingRealTimeHandler",
+            "history-provider": "QuantConnect.Lean.Engine.HistoricalData.SubscriptionDataReaderHistoryProvider",
+            "transaction-handler": "QuantConnect.Lean.Engine.TransactionHandlers.BacktestingTransactionHandler"
+        }
+    },
+    "job-organization-id": "",
+    "job-user-id": "0",
+    "file-database-last-update": "02/18/2026 22:56:39"
+}
